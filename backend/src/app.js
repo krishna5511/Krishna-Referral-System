@@ -22,12 +22,16 @@ console.log("ALLOWED ORIGINS =", allowedOrigins);
 app.use(
   cors({
     origin(origin, callback) {
+      console.log("Incoming Origin:", origin);
+
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
+        console.log("✅ Allowed:", origin);
         return callback(null, true);
       }
 
+      console.log("❌ Blocked:", origin);
       return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
