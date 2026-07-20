@@ -10,10 +10,8 @@ const api = axios.create({
   },
 });
 
-// ===== DEBUG =====
-console.log("ENV BASE URL :", import.meta.env.VITE_API_URL);
-console.log("AXIOS BASE URL :", api.defaults.baseURL);
-// =================
+
+
 
 // Request interceptor
 api.interceptors.request.use(
