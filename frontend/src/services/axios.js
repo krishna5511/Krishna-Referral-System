@@ -10,21 +10,27 @@ const api = axios.create({
   },
 });
 
-console.log("BASE URL =", import.meta.env.VITE_API_URL);
+// ===== DEBUG =====
+console.log("ENV BASE URL :", import.meta.env.VITE_API_URL);
+console.log("AXIOS BASE URL :", api.defaults.baseURL);
+// =================
 
-// Request interceptor — attach token from localStorage if available
+// Request interceptor
 api.interceptors.request.use(
   (config) => {
+    console.log("➡️ Request URL:", `${config.baseURL}${config.url}`);
+
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Response interceptor — handle errors globally
+// Response interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -37,27 +43,29 @@ api.interceptors.response.use(
 
     switch (status) {
       case 401:
-        // Token expired or missing
         localStorage.removeItem('token');
-        // Dispatch logout if not already on auth pages
-        if (!window.location.pathname.includes('/login') &&
-            !window.location.pathname.includes('/signup') &&
-            !window.location.pathname.includes('/forgot-password') &&
-            !window.location.pathname.includes('/reset-password') &&
-            !window.location.pathname.includes('/verify-email')) {
-          // We'll handle this in the auth slice
+        if (
+          !window.location.pathname.includes('/login') &&
+          !window.location.pathname.includes('/signup') &&
+          !window.location.pathname.includes('/forgot-password') &&
+          !window.location.pathname.includes('/reset-password') &&
+          !window.location.pathname.includes('/verify-email')
+        ) {
           window.dispatchEvent(new CustomEvent('auth:logout'));
         }
         break;
+
       case 403:
-        // Blocked or forbidden - don't toast, let component handle
         break;
+
       case 429:
         toast.error('Too many requests. Please wait 15 minutes.');
         break;
+
       case 500:
-        toast.error(data?.message || 'Internal server error. Please try again.');
+        toast.error(data?.message || 'Internal server error.');
         break;
+
       default:
         break;
     }
