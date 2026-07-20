@@ -1,11 +1,13 @@
 const express = require("express");
 const app = express();
+
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+
 app.use(express.json());
 app.use(cookieParser());
-import cors from "cors";
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -15,7 +17,6 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Postman ya server-to-server requests
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
@@ -28,13 +29,6 @@ app.use(
   })
 );
 
-
-// ==========================
-// helmet
-// ==========================
-
-
-const helmet = require("helmet");
 app.use(helmet());
 
 
