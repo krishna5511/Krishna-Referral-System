@@ -10,6 +10,8 @@ const api = axios.create({
   },
 });
 
+console.log("BASE URL =", import.meta.env.VITE_API_URL);
+
 // Request interceptor — attach token from localStorage if available
 api.interceptors.request.use(
   (config) => {
