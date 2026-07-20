@@ -11,8 +11,9 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:5173",
-  process.env.CLIENT_URL,
   "https://krishna-referral-system.vercel.app",
+  "https://krishna-referral-system-krishnas-projects-c1fe5c17.vercel.app",
+  process.env.CLIENT_URL,
 ];
 
 console.log("CLIENT_URL =", process.env.CLIENT_URL);
@@ -20,7 +21,7 @@ console.log("ALLOWED ORIGINS =", allowedOrigins);
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin(origin, callback) {
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
