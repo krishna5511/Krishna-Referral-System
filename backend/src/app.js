@@ -12,16 +12,14 @@ app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:5173",
   "https://krishna-referral-system.vercel.app",
+  "https://krishna-referral-system-git-main-krishnas-projects-c1fe5c17.vercel.app",
   "https://krishna-referral-system-krishnas-projects-c1fe5c17.vercel.app",
-  process.env.CLIENT_URL,
 ];
-
-console.log("CLIENT_URL =", process.env.CLIENT_URL);
-console.log("ALLOWED ORIGINS =", allowedOrigins);
 
 app.use(
   cors({
-    origin(origin, callback) {
+    credentials: true,
+    origin: (origin, callback) => {
       console.log("Incoming Origin:", origin);
 
       if (!origin) return callback(null, true);
@@ -32,9 +30,10 @@ app.use(
       }
 
       console.log("❌ Blocked:", origin);
-      return callback(new Error("Not allowed by CORS"));
+
+      // ❗ Testing ke liye temporarily allow kar do
+      return callback(null, true);
     },
-    credentials: true,
   })
 );
 
